@@ -63,8 +63,11 @@ Public Class DocumentListRow
         Set(value As Date?)
             _neDate = value
             OnPropertyChanged(NameOf(NEDate))
-            OnPropertyChanged(NameOf(NEDaysLeftDisplay))
-            OnPropertyChanged(NameOf(NEDaysLeftBrush))
+            OnPropertyChanged(NameOf(ExpectedDate))
+            OnPropertyChanged(NameOf(ResultDisplay))
+            OnPropertyChanged(NameOf(ResultBrush))
+            OnPropertyChanged(NameOf(RowBackground))
+            OnPropertyChanged(NameOf(RowBorderBrush))
         End Set
     End Property
 
@@ -75,34 +78,57 @@ Public Class DocumentListRow
         Set(value As Date?)
             _manufacturerDate = value
             OnPropertyChanged(NameOf(ManufacturerDate))
-            OnPropertyChanged(NameOf(ManufacturerDaysLeftDisplay))
-            OnPropertyChanged(NameOf(ManufacturerDaysLeftBrush))
+            OnPropertyChanged(NameOf(EffectiveDate))
+            OnPropertyChanged(NameOf(ResultDisplay))
+            OnPropertyChanged(NameOf(ResultBrush))
             OnPropertyChanged(NameOf(RowBackground))
             OnPropertyChanged(NameOf(RowBorderBrush))
         End Set
     End Property
 
-    Public ReadOnly Property NEDaysLeftDisplay As String
+    Public ReadOnly Property ExpectedDate As Date?
         Get
-            Return FormatDaysLeft(NEDate)
+            Return NEDate
         End Get
     End Property
 
-    Public ReadOnly Property ManufacturerDaysLeftDisplay As String
+    Public ReadOnly Property EffectiveDate As Date?
         Get
-            Return FormatDaysLeft(ManufacturerDate)
+            Return ManufacturerDate
         End Get
     End Property
 
-    Public ReadOnly Property NEDaysLeftBrush As Brush
+    Public ReadOnly Property ResultDisplay As String
         Get
-            Return GetDaysLeftBrush(NEDate)
+            If Not ExpectedDate.HasValue OrElse Not EffectiveDate.HasValue Then
+                Return "-"
+            End If
+
+            Dim lateDays = CInt((EffectiveDate.Value.Date - ExpectedDate.Value.Date).TotalDays)
+
+            If lateDays <= 0 Then
+                Return "In Time"
+            End If
+
+            If lateDays = 1 Then
+                Return "Late by 1 Day"
+            End If
+
+            Return "Late by " & lateDays.ToString() & " Days"
         End Get
     End Property
 
-    Public ReadOnly Property ManufacturerDaysLeftBrush As Brush
+    Public ReadOnly Property ResultBrush As Brush
         Get
-            Return GetDaysLeftBrush(ManufacturerDate)
+            If Not ExpectedDate.HasValue OrElse Not EffectiveDate.HasValue Then
+                Return New SolidColorBrush(Color.FromRgb(152, 162, 179))
+            End If
+
+            If EffectiveDate.Value.Date <= ExpectedDate.Value.Date Then
+                Return New SolidColorBrush(Color.FromRgb(110, 231, 183))
+            End If
+
+            Return New SolidColorBrush(Color.FromRgb(248, 113, 113))
         End Get
     End Property
 
@@ -112,7 +138,7 @@ Public Class DocumentListRow
                 Return New SolidColorBrush(Color.FromRgb(20, 45, 34))
             End If
 
-            If ManufacturerDate.HasValue AndAlso ManufacturerDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
+            If ExpectedDate.HasValue AndAlso ExpectedDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
                 Return New SolidColorBrush(Color.FromRgb(58, 24, 28))
             End If
 
@@ -126,7 +152,7 @@ Public Class DocumentListRow
                 Return New SolidColorBrush(Color.FromRgb(34, 197, 94))
             End If
 
-            If ManufacturerDate.HasValue AndAlso ManufacturerDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
+            If ExpectedDate.HasValue AndAlso ExpectedDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
                 Return New SolidColorBrush(Color.FromRgb(220, 38, 38))
             End If
 
@@ -177,32 +203,6 @@ Public Class DocumentListRow
             Return StatusForeground
         End Get
     End Property
-
-    Private Function FormatDaysLeft(targetDate As Date?) As String
-        If Not targetDate.HasValue Then Return "-"
-
-        Dim days = CInt((targetDate.Value.Date - Date.Today).TotalDays)
-
-        If days > 0 Then Return days.ToString()
-        If days = 0 Then Return "Today"
-        Return days.ToString()
-    End Function
-
-    Private Function GetDaysLeftBrush(targetDate As Date?) As Brush
-        If Not targetDate.HasValue Then
-            Return New SolidColorBrush(Color.FromRgb(152, 162, 179))
-        End If
-
-        Dim days = CInt((targetDate.Value.Date - Date.Today).TotalDays)
-
-        If days < 0 Then
-            Return New SolidColorBrush(Color.FromRgb(248, 113, 113))
-        ElseIf days <= 3 Then
-            Return New SolidColorBrush(Color.FromRgb(251, 191, 36))
-        Else
-            Return New SolidColorBrush(Color.FromRgb(229, 231, 235))
-        End If
-    End Function
 
     Private Function NormalizeStatus(value As String) As String
         If String.IsNullOrWhiteSpace(value) Then Return ""

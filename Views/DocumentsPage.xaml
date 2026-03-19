@@ -252,7 +252,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="DaysLeftTextStyle" TargetType="TextBlock">
+        <Style x:Key="ResultTextStyle" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -379,10 +379,10 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="NE Date" Width="120" SortMemberPath="NEDate">
+                        <DataGridTemplateColumn Header="Expected Date" Width="130" SortMemberPath="NEDate">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding NEDate, StringFormat=dd/MM/yyyy}"
+                                    <TextBlock Text="{Binding ExpectedDate, StringFormat=dd/MM/yyyy}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextPrimaryBrush}"
@@ -391,20 +391,10 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Days Left" Width="110" SortMemberPath="NEDate">
+                        <DataGridTemplateColumn Header="Effective Date" Width="130" SortMemberPath="ManufacturerDate">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding NEDaysLeftDisplay}"
-                                               Style="{StaticResource DaysLeftTextStyle}"
-                                               Foreground="{Binding NEDaysLeftBrush}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="Manufacturer Date" Width="130" SortMemberPath="ManufacturerDate">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ManufacturerDate, StringFormat=dd/MM/yyyy}"
+                                    <TextBlock Text="{Binding EffectiveDate, StringFormat=dd/MM/yyyy}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextPrimaryBrush}"
@@ -413,12 +403,12 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Days Left" Width="160" SortMemberPath="ManufacturerDate">
+                        <DataGridTemplateColumn Header="Result" Width="160" SortMemberPath="ManufacturerDate">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding ManufacturerDaysLeftDisplay}"
-                                               Style="{StaticResource DaysLeftTextStyle}"
-                                               Foreground="{Binding ManufacturerDaysLeftBrush}"/>
+                                    <TextBlock Text="{Binding ResultDisplay}"
+                                               Style="{StaticResource ResultTextStyle}"
+                                               Foreground="{Binding ResultBrush}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
