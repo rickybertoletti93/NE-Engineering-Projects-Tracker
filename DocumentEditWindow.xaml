@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="Document"
-        Height="480"
+        Height="620"
         Width="660"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
@@ -265,6 +265,8 @@
                 <RowDefinition Height="70"/>
                 <RowDefinition Height="15"/>
                 <RowDefinition Height="70"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="70"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
@@ -326,7 +328,7 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="NE Date"
+                    <TextBlock Text="SRL Expected Date"
                                Style="{StaticResource FieldLabelStyle}"/>
                     <Grid>
                         <Button x:Name="btnNEDate"
@@ -340,7 +342,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
-                    <TextBlock Text="Manufacturer Date"
+                    <TextBlock Text="Manufacturer Expected Date"
                                Style="{StaticResource FieldLabelStyle}"/>
                     <Grid>
                         <Button x:Name="btnManufacturerDate"
@@ -354,7 +356,43 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel Grid.Row="10"
+            <Grid Grid.Row="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="SRL Effective Date"
+                               Style="{StaticResource FieldLabelStyle}"/>
+                    <Grid>
+                        <Button x:Name="btnSRLEffectiveDate"
+                                Style="{StaticResource DateDisplayButtonStyle}"
+                                Click="btnSRLEffectiveDate_Click"
+                                Tag="Select a date"/>
+                        <DatePicker x:Name="dpSRLEffectiveDate"
+                                    Style="{StaticResource HiddenDatePickerStyle}"
+                                    SelectedDateChanged="dpSRLEffectiveDate_SelectedDateChanged"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Manufacturer Effective Date"
+                               Style="{StaticResource FieldLabelStyle}"/>
+                    <Grid>
+                        <Button x:Name="btnManufacturerEffectiveDate"
+                                Style="{StaticResource DateDisplayButtonStyle}"
+                                Click="btnManufacturerEffectiveDate_Click"
+                                Tag="Select a date"/>
+                        <DatePicker x:Name="dpManufacturerEffectiveDate"
+                                    Style="{StaticResource HiddenDatePickerStyle}"
+                                    SelectedDateChanged="dpManufacturerEffectiveDate_SelectedDateChanged"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="12"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="Cancel"

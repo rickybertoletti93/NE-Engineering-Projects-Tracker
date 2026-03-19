@@ -10,6 +10,7 @@
     Public Property CurrentRevision As String
     Public Property IssueDate As Date?
     Public Property DateToManufacturer As Date?
+    Public Property ManufacturerEffectiveDate As Date?
     Public Property Status As String
 
     Public Overridable Property Project As Project
