@@ -252,7 +252,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="DaysLeftTextStyle" TargetType="TextBlock">
+        <Style x:Key="ResultTextStyle" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -379,10 +379,20 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="NE Date" Width="120" SortMemberPath="NEDate">
+                        <DataGridTemplateColumn Width="115" SortMemberPath="NEDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="SRL Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Expected Date"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding NEDate, StringFormat=dd/MM/yyyy}"
+                                    <TextBlock Text="{Binding SRLExpectedDate, StringFormat=dd/MM/yyyy}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextPrimaryBrush}"
@@ -391,20 +401,20 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Days Left" Width="110" SortMemberPath="NEDate">
+                        <DataGridTemplateColumn Width="115" SortMemberPath="SRLEffectiveDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="SRL Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Effective Date"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding NEDaysLeftDisplay}"
-                                               Style="{StaticResource DaysLeftTextStyle}"
-                                               Foreground="{Binding NEDaysLeftBrush}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="Manufacturer Date" Width="130" SortMemberPath="ManufacturerDate">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ManufacturerDate, StringFormat=dd/MM/yyyy}"
+                                    <TextBlock Text="{Binding SRLEffectiveDate, StringFormat=dd/MM/yyyy}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextPrimaryBrush}"
@@ -413,12 +423,86 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Days Left" Width="160" SortMemberPath="ManufacturerDate">
+                        <DataGridTemplateColumn Width="130" SortMemberPath="SRLEffectiveDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="SRL Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Result"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding ManufacturerDaysLeftDisplay}"
-                                               Style="{StaticResource DaysLeftTextStyle}"
-                                               Foreground="{Binding ManufacturerDaysLeftBrush}"/>
+                                    <TextBlock Text="{Binding SRLResultDisplay}"
+                                               Style="{StaticResource ResultTextStyle}"
+                                               Foreground="{Binding SRLResultBrush}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="115" SortMemberPath="ManufacturerDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="MANUFACTURER Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Expected Date"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufacturerExpectedDate, StringFormat=dd/MM/yyyy}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       FontWeight="SemiBold"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="115" SortMemberPath="ManufacturerEffectiveDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="MANUFACTURER Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Effective Date"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufacturerEffectiveDate, StringFormat=dd/MM/yyyy}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       FontWeight="SemiBold"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="130" SortMemberPath="ManufacturerEffectiveDate">
+                            <DataGridTemplateColumn.Header>
+                                <StackPanel>
+                                    <TextBlock Text="MANUFACTURER Submission"
+                                               TextAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="Result"
+                                               TextAlignment="Center"/>
+                                </StackPanel>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ManufacturerResultDisplay}"
+                                               Style="{StaticResource ResultTextStyle}"
+                                               Foreground="{Binding ManufacturerResultBrush}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

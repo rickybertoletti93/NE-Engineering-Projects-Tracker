@@ -10,6 +10,8 @@ Public Class DocumentListRow
     Private _status As String
     Private _neDate As Date?
     Private _manufacturerDate As Date?
+    Private _srlEffectiveDate As Date?
+    Private _manufacturerEffectiveDate As Date?
 
     Public Property Id As Integer
         Get
@@ -63,8 +65,11 @@ Public Class DocumentListRow
         Set(value As Date?)
             _neDate = value
             OnPropertyChanged(NameOf(NEDate))
-            OnPropertyChanged(NameOf(NEDaysLeftDisplay))
-            OnPropertyChanged(NameOf(NEDaysLeftBrush))
+            OnPropertyChanged(NameOf(SRLExpectedDate))
+            OnPropertyChanged(NameOf(SRLResultDisplay))
+            OnPropertyChanged(NameOf(SRLResultBrush))
+            OnPropertyChanged(NameOf(RowBackground))
+            OnPropertyChanged(NameOf(RowBorderBrush))
         End Set
     End Property
 
@@ -75,34 +80,75 @@ Public Class DocumentListRow
         Set(value As Date?)
             _manufacturerDate = value
             OnPropertyChanged(NameOf(ManufacturerDate))
-            OnPropertyChanged(NameOf(ManufacturerDaysLeftDisplay))
-            OnPropertyChanged(NameOf(ManufacturerDaysLeftBrush))
+            OnPropertyChanged(NameOf(ManufacturerExpectedDate))
+            OnPropertyChanged(NameOf(ManufacturerResultDisplay))
+            OnPropertyChanged(NameOf(ManufacturerResultBrush))
             OnPropertyChanged(NameOf(RowBackground))
             OnPropertyChanged(NameOf(RowBorderBrush))
         End Set
     End Property
 
-    Public ReadOnly Property NEDaysLeftDisplay As String
+    Public Property SRLEffectiveDate As Date?
         Get
-            Return FormatDaysLeft(NEDate)
+            Return _srlEffectiveDate
+        End Get
+        Set(value As Date?)
+            _srlEffectiveDate = value
+            OnPropertyChanged(NameOf(SRLEffectiveDate))
+            OnPropertyChanged(NameOf(SRLResultDisplay))
+            OnPropertyChanged(NameOf(SRLResultBrush))
+            OnPropertyChanged(NameOf(RowBackground))
+            OnPropertyChanged(NameOf(RowBorderBrush))
+        End Set
+    End Property
+
+    Public Property ManufacturerEffectiveDate As Date?
+        Get
+            Return _manufacturerEffectiveDate
+        End Get
+        Set(value As Date?)
+            _manufacturerEffectiveDate = value
+            OnPropertyChanged(NameOf(ManufacturerEffectiveDate))
+            OnPropertyChanged(NameOf(ManufacturerResultDisplay))
+            OnPropertyChanged(NameOf(ManufacturerResultBrush))
+            OnPropertyChanged(NameOf(RowBackground))
+            OnPropertyChanged(NameOf(RowBorderBrush))
+        End Set
+    End Property
+
+    Public ReadOnly Property SRLExpectedDate As Date?
+        Get
+            Return NEDate
         End Get
     End Property
 
-    Public ReadOnly Property ManufacturerDaysLeftDisplay As String
+    Public ReadOnly Property ManufacturerExpectedDate As Date?
         Get
-            Return FormatDaysLeft(ManufacturerDate)
+            Return ManufacturerDate
         End Get
     End Property
 
-    Public ReadOnly Property NEDaysLeftBrush As Brush
+    Public ReadOnly Property SRLResultDisplay As String
         Get
-            Return GetDaysLeftBrush(NEDate)
+            Return FormatResult(SRLExpectedDate, SRLEffectiveDate)
         End Get
     End Property
 
-    Public ReadOnly Property ManufacturerDaysLeftBrush As Brush
+    Public ReadOnly Property ManufacturerResultDisplay As String
         Get
-            Return GetDaysLeftBrush(ManufacturerDate)
+            Return FormatResult(ManufacturerExpectedDate, ManufacturerEffectiveDate)
+        End Get
+    End Property
+
+    Public ReadOnly Property SRLResultBrush As Brush
+        Get
+            Return GetResultBrush(SRLExpectedDate, SRLEffectiveDate)
+        End Get
+    End Property
+
+    Public ReadOnly Property ManufacturerResultBrush As Brush
+        Get
+            Return GetResultBrush(ManufacturerExpectedDate, ManufacturerEffectiveDate)
         End Get
     End Property
 
@@ -112,7 +158,7 @@ Public Class DocumentListRow
                 Return New SolidColorBrush(Color.FromRgb(20, 45, 34))
             End If
 
-            If ManufacturerDate.HasValue AndAlso ManufacturerDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
+            If IsOverdue(SRLExpectedDate, SRLEffectiveDate) OrElse IsOverdue(ManufacturerExpectedDate, ManufacturerEffectiveDate) Then
                 Return New SolidColorBrush(Color.FromRgb(58, 24, 28))
             End If
 
@@ -126,7 +172,7 @@ Public Class DocumentListRow
                 Return New SolidColorBrush(Color.FromRgb(34, 197, 94))
             End If
 
-            If ManufacturerDate.HasValue AndAlso ManufacturerDate.Value.Date < Date.Today AndAlso NormalizeStatus(Status) <> "ISSUED" Then
+            If IsOverdue(SRLExpectedDate, SRLEffectiveDate) OrElse IsOverdue(ManufacturerExpectedDate, ManufacturerEffectiveDate) Then
                 Return New SolidColorBrush(Color.FromRgb(220, 38, 38))
             End If
 
@@ -178,35 +224,51 @@ Public Class DocumentListRow
         End Get
     End Property
 
-    Private Function FormatDaysLeft(targetDate As Date?) As String
-        If Not targetDate.HasValue Then Return "-"
-
-        Dim days = CInt((targetDate.Value.Date - Date.Today).TotalDays)
-
-        If days > 0 Then Return days.ToString()
-        If days = 0 Then Return "Today"
-        Return days.ToString()
-    End Function
-
-    Private Function GetDaysLeftBrush(targetDate As Date?) As Brush
-        If Not targetDate.HasValue Then
-            Return New SolidColorBrush(Color.FromRgb(152, 162, 179))
-        End If
-
-        Dim days = CInt((targetDate.Value.Date - Date.Today).TotalDays)
-
-        If days < 0 Then
-            Return New SolidColorBrush(Color.FromRgb(248, 113, 113))
-        ElseIf days <= 3 Then
-            Return New SolidColorBrush(Color.FromRgb(251, 191, 36))
-        Else
-            Return New SolidColorBrush(Color.FromRgb(229, 231, 235))
-        End If
-    End Function
-
     Private Function NormalizeStatus(value As String) As String
         If String.IsNullOrWhiteSpace(value) Then Return ""
         Return value.Trim().ToUpperInvariant()
+    End Function
+
+    Private Function FormatResult(expectedDate As Date?, effectiveDate As Date?) As String
+        If Not expectedDate.HasValue OrElse Not effectiveDate.HasValue Then
+            Return "-"
+        End If
+
+        Dim lateDays = CInt((effectiveDate.Value.Date - expectedDate.Value.Date).TotalDays)
+
+        If lateDays <= 0 Then
+            Return "In Time"
+        End If
+
+        If lateDays = 1 Then
+            Return "Late by 1 Day"
+        End If
+
+        Return "Late by " & lateDays.ToString() & " Days"
+    End Function
+
+    Private Function GetResultBrush(expectedDate As Date?, effectiveDate As Date?) As Brush
+        If Not expectedDate.HasValue OrElse Not effectiveDate.HasValue Then
+            Return New SolidColorBrush(Color.FromRgb(152, 162, 179))
+        End If
+
+        If effectiveDate.Value.Date <= expectedDate.Value.Date Then
+            Return New SolidColorBrush(Color.FromRgb(110, 231, 183))
+        End If
+
+        Return New SolidColorBrush(Color.FromRgb(248, 113, 113))
+    End Function
+
+    Private Function IsOverdue(expectedDate As Date?, effectiveDate As Date?) As Boolean
+        If Not expectedDate.HasValue Then
+            Return False
+        End If
+
+        If effectiveDate.HasValue Then
+            Return False
+        End If
+
+        Return expectedDate.Value.Date < Date.Today
     End Function
 
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged

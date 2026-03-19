@@ -63,14 +63,30 @@ Class DocumentsPage
                 OrderBy(Function(d) d.DocumentNumber).
                 ToList()
 
+            Dim documentIds = documents.Select(Function(d) d.Id).ToList()
+            Dim latestRevisionByDocumentId = db.DocumentRevisions.
+                Where(Function(r) documentIds.Contains(r.ProjectDocumentId)).
+                AsEnumerable().
+                GroupBy(Function(r) r.ProjectDocumentId).
+                ToDictionary(Function(g) g.Key,
+                             Function(g) g.OrderByDescending(Function(r) r.RevisionCode).ThenByDescending(Function(r) r.Id).FirstOrDefault())
+
             For Each doc In documents
+                Dim latestRevision As DocumentRevision = Nothing
+
+                If latestRevisionByDocumentId.ContainsKey(doc.Id) Then
+                    latestRevision = latestRevisionByDocumentId(doc.Id)
+                End If
+
                 DocumentRows.Add(New DocumentListRow With {
                     .Id = doc.Id,
                     .DocumentNumber = doc.DocumentNumber,
                     .Title = doc.Title,
                     .Status = doc.Status,
                     .NEDate = doc.IssueDate,
-                    .ManufacturerDate = doc.DateToManufacturer
+                    .ManufacturerDate = doc.DateToManufacturer,
+                    .SRLEffectiveDate = If(latestRevision IsNot Nothing, latestRevision.OfficialIssueDate, Nothing),
+                    .ManufacturerEffectiveDate = Nothing
                 })
             Next
 
