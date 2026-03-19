@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Background="#10151B"
+        Background="#EEF3F8"
         AllowsTransparency="False">
 
     <shell:WindowChrome.WindowChrome>
@@ -20,12 +20,12 @@
     </shell:WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <SolidColorBrush x:Key="DialogBackgroundBrush" Color="#10151B"/>
-        <SolidColorBrush x:Key="BorderBrush" Color="#2B3340"/>
-        <SolidColorBrush x:Key="TextBrush" Color="#E5E7EB"/>
-        <SolidColorBrush x:Key="MutedTextBrush" Color="#98A2B3"/>
-        <SolidColorBrush x:Key="AccentBrush" Color="#D90429"/>
-        <SolidColorBrush x:Key="FieldBrush" Color="#1D232B"/>
+        <SolidColorBrush x:Key="DialogBackgroundBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#D8E1EA"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#2E3B45"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#728190"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#1F6EA5"/>
+        <SolidColorBrush x:Key="FieldBrush" Color="#F6F9FC"/>
 
         <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
@@ -53,7 +53,7 @@
                     <ControlTemplate TargetType="ToggleButton">
                         <Border Background="Transparent">
                             <TextBlock Text="▼"
-                                       Foreground="#98A2B3"
+                                       Foreground="#728190"
                                        FontSize="10"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"/>
@@ -78,10 +78,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#2A313C"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#EEF5FB"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#D90429"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#DCEBF7"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -125,7 +125,7 @@
                                    AllowsTransparency="True"
                                    Focusable="False"
                                    PopupAnimation="Fade">
-                                <Border Background="#1B2028"
+                                <Border Background="#FFFFFF"
                                         BorderBrush="{StaticResource BorderBrush}"
                                         BorderThickness="1"
                                         CornerRadius="12"
@@ -140,10 +140,10 @@
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#465062"/>
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#AFC6D9"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#D90429"/>
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#1F6EA5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -180,7 +180,7 @@
                                 <Border Grid.Column="1"
                                         BorderBrush="{StaticResource BorderBrush}"
                                         BorderThickness="1,0,0,0"
-                                        Background="#242B35">
+                                        Background="#EDF4FA">
                                     <TextBlock Text="📅"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
@@ -249,10 +249,11 @@
     </Window.Resources>
 
     <Border Background="{StaticResource DialogBackgroundBrush}"
-            BorderBrush="#2A3040"
+            BorderBrush="{StaticResource BorderBrush}"
             BorderThickness="1"
             CornerRadius="18"
-            Padding="22">
+            Padding="22"
+            FontFamily="Segoe UI">
 
         <Grid>
             <Grid.RowDefinitions>

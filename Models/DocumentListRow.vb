@@ -155,28 +155,20 @@ Public Class DocumentListRow
     Public ReadOnly Property RowBackground As Brush
         Get
             If NormalizeStatus(Status) = "ISSUED" Then
-                Return New SolidColorBrush(Color.FromRgb(20, 45, 34))
+                Return New SolidColorBrush(Color.FromRgb(232, 244, 252))
             End If
 
-            If IsOverdue(SRLExpectedDate, SRLEffectiveDate) OrElse IsOverdue(ManufacturerExpectedDate, ManufacturerEffectiveDate) Then
-                Return New SolidColorBrush(Color.FromRgb(58, 24, 28))
-            End If
-
-            Return New SolidColorBrush(Color.FromRgb(23, 29, 37))
+            Return New SolidColorBrush(Colors.White)
         End Get
     End Property
 
     Public ReadOnly Property RowBorderBrush As Brush
         Get
             If NormalizeStatus(Status) = "ISSUED" Then
-                Return New SolidColorBrush(Color.FromRgb(34, 197, 94))
+                Return New SolidColorBrush(Color.FromRgb(190, 220, 241))
             End If
 
-            If IsOverdue(SRLExpectedDate, SRLEffectiveDate) OrElse IsOverdue(ManufacturerExpectedDate, ManufacturerEffectiveDate) Then
-                Return New SolidColorBrush(Color.FromRgb(220, 38, 38))
-            End If
-
-            Return New SolidColorBrush(Color.FromRgb(35, 43, 54))
+            Return New SolidColorBrush(Color.FromRgb(222, 230, 238))
         End Get
     End Property
 
@@ -184,17 +176,17 @@ Public Class DocumentListRow
         Get
             Select Case NormalizeStatus(Status)
                 Case "ISSUED"
-                    Return New SolidColorBrush(Color.FromRgb(18, 59, 43))
+                    Return New SolidColorBrush(Color.FromRgb(232, 244, 252))
                 Case "READY FOR ISSUE"
-                    Return New SolidColorBrush(Color.FromRgb(24, 56, 86))
+                    Return New SolidColorBrush(Color.FromRgb(232, 241, 250))
                 Case "UNDER INTERNAL REVIEW"
-                    Return New SolidColorBrush(Color.FromRgb(74, 52, 20))
+                    Return New SolidColorBrush(Color.FromRgb(255, 244, 224))
                 Case "COMMENTS TO IMPLEMENT"
-                    Return New SolidColorBrush(Color.FromRgb(82, 31, 35))
+                    Return New SolidColorBrush(Color.FromRgb(252, 236, 238))
                 Case "WORKING"
-                    Return New SolidColorBrush(Color.FromRgb(33, 45, 66))
+                    Return New SolidColorBrush(Color.FromRgb(235, 244, 251))
                 Case Else
-                    Return New SolidColorBrush(Color.FromRgb(39, 45, 56))
+                    Return New SolidColorBrush(Color.FromRgb(244, 247, 250))
             End Select
         End Get
     End Property
@@ -203,17 +195,17 @@ Public Class DocumentListRow
         Get
             Select Case NormalizeStatus(Status)
                 Case "ISSUED"
-                    Return New SolidColorBrush(Color.FromRgb(110, 231, 183))
+                    Return New SolidColorBrush(Color.FromRgb(31, 110, 165))
                 Case "READY FOR ISSUE"
-                    Return New SolidColorBrush(Color.FromRgb(147, 197, 253))
+                    Return New SolidColorBrush(Color.FromRgb(43, 102, 153))
                 Case "UNDER INTERNAL REVIEW"
-                    Return New SolidColorBrush(Color.FromRgb(251, 191, 36))
+                    Return New SolidColorBrush(Color.FromRgb(171, 111, 26))
                 Case "COMMENTS TO IMPLEMENT"
-                    Return New SolidColorBrush(Color.FromRgb(252, 165, 165))
+                    Return New SolidColorBrush(Color.FromRgb(183, 83, 93))
                 Case "WORKING"
-                    Return New SolidColorBrush(Color.FromRgb(191, 219, 254))
+                    Return New SolidColorBrush(Color.FromRgb(49, 115, 165))
                 Case Else
-                    Return New SolidColorBrush(Color.FromRgb(203, 213, 225))
+                    Return New SolidColorBrush(Color.FromRgb(99, 114, 128))
             End Select
         End Get
     End Property
@@ -249,26 +241,14 @@ Public Class DocumentListRow
 
     Private Function GetResultBrush(expectedDate As Date?, effectiveDate As Date?) As Brush
         If Not expectedDate.HasValue OrElse Not effectiveDate.HasValue Then
-            Return New SolidColorBrush(Color.FromRgb(152, 162, 179))
+            Return New SolidColorBrush(Color.FromRgb(119, 134, 149))
         End If
 
         If effectiveDate.Value.Date <= expectedDate.Value.Date Then
-            Return New SolidColorBrush(Color.FromRgb(110, 231, 183))
+            Return New SolidColorBrush(Color.FromRgb(31, 110, 165))
         End If
 
-        Return New SolidColorBrush(Color.FromRgb(248, 113, 113))
-    End Function
-
-    Private Function IsOverdue(expectedDate As Date?, effectiveDate As Date?) As Boolean
-        If Not expectedDate.HasValue Then
-            Return False
-        End If
-
-        If effectiveDate.HasValue Then
-            Return False
-        End If
-
-        Return expectedDate.Value.Date < Date.Today
+        Return New SolidColorBrush(Color.FromRgb(201, 112, 69))
     End Function
 
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
