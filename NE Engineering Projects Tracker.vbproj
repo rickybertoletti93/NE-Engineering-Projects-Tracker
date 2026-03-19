@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>NE_Engineering_Projects_Tracker</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon\NEUAEPT_Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Logo.png" />
+    <None Remove="Logo_Lower1.png" />
+    <None Remove="Logo_Lower2.png" />
+    <None Remove="NEUAEPT_Logo.png" />
+    <None Remove="Sidebar.png" />
+    <None Remove="SideBar_Background.png" />
+    <None Remove="SIdeBar_BG.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icon\NEUAEPT_Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Documents" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Windows.Media" />
+    <Import Include="System.Windows.Media.Imaging" />
+    <Import Include="System.Windows.Navigation" />
+    <Import Include="System.Windows.Shapes" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="MaterialDesignColors" Version="5.3.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+    <Folder Include="Styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Logo.png" />
+    <Resource Include="Logo_Lower1.png" />
+    <Resource Include="Logo_Lower2.png" />
+    <Resource Include="NEUAEPT_Logo.png" />
+    <Resource Include="Sidebar.png" />
+    <Resource Include="SideBar_Background.png" />
+    <Resource Include="SIdeBar_BG.png" />
+  </ItemGroup>
+
+</Project>
