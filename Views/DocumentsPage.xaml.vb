@@ -63,14 +63,30 @@ Class DocumentsPage
                 OrderBy(Function(d) d.DocumentNumber).
                 ToList()
 
+            Dim documentIds = documents.Select(Function(d) d.Id).ToList()
+            Dim latestRevisionByDocumentId = db.DocumentRevisions.
+                Where(Function(r) documentIds.Contains(r.ProjectDocumentId)).
+                AsEnumerable().
+                GroupBy(Function(r) r.ProjectDocumentId).
+                ToDictionary(Function(g) g.Key,
+                             Function(g) g.OrderByDescending(Function(r) r.RevisionCode).ThenByDescending(Function(r) r.Id).FirstOrDefault())
+
             For Each doc In documents
+                Dim latestRevision As DocumentRevision = Nothing
+
+                If latestRevisionByDocumentId.ContainsKey(doc.Id) Then
+                    latestRevision = latestRevisionByDocumentId(doc.Id)
+                End If
+
                 DocumentRows.Add(New DocumentListRow With {
                     .Id = doc.Id,
                     .DocumentNumber = doc.DocumentNumber,
                     .Title = doc.Title,
                     .Status = doc.Status,
                     .NEDate = doc.IssueDate,
-                    .ManufacturerDate = doc.DateToManufacturer
+                    .ManufacturerDate = doc.DateToManufacturer,
+                    .SRLEffectiveDate = If(latestRevision IsNot Nothing, latestRevision.OfficialIssueDate, Nothing),
+                    .ManufacturerEffectiveDate = doc.ManufacturerEffectiveDate
                 })
             Next
 
@@ -107,6 +123,8 @@ Class DocumentsPage
             "",
             "NOT STARTED",
             Date.Today,
+            Nothing,
+            Nothing,
             Nothing
         )
         dlg.Owner = Window.GetWindow(Me)
@@ -132,6 +150,7 @@ Class DocumentsPage
                 .CurrentRevision = "00",
                 .IssueDate = dlg.NEDateValue,
                 .DateToManufacturer = dlg.ManufacturerDateValue,
+                .ManufacturerEffectiveDate = dlg.ManufacturerEffectiveDateValue,
                 .Status = dlg.StatusValue
             }
 
@@ -147,7 +166,7 @@ Class DocumentsPage
                 .AssignedTo = "",
                 .InternalReceiveDate = dlg.NEDateValue,
                 .DateExpected = Nothing,
-                .OfficialIssueDate = Nothing
+                .OfficialIssueDate = dlg.SRLEffectiveDateValue
             }
 
             db.DocumentRevisions.Add(revision)
@@ -173,7 +192,14 @@ Class DocumentsPage
                 document.Title,
                 document.Status,
                 document.IssueDate,
-                document.DateToManufacturer
+                document.DateToManufacturer,
+                db.DocumentRevisions.
+                    Where(Function(r) r.ProjectDocumentId = document.Id).
+                    OrderByDescending(Function(r) r.RevisionCode).
+                    ThenByDescending(Function(r) r.Id).
+                    Select(Function(r) r.OfficialIssueDate).
+                    FirstOrDefault(),
+                document.ManufacturerEffectiveDate
             )
 
             dlg.Owner = Window.GetWindow(Me)
@@ -193,6 +219,27 @@ Class DocumentsPage
             document.Status = dlg.StatusValue
             document.IssueDate = dlg.NEDateValue
             document.DateToManufacturer = dlg.ManufacturerDateValue
+            document.ManufacturerEffectiveDate = dlg.ManufacturerEffectiveDateValue
+
+            Dim latestRevision = db.DocumentRevisions.
+                Where(Function(r) r.ProjectDocumentId = document.Id).
+                OrderByDescending(Function(r) r.RevisionCode).
+                ThenByDescending(Function(r) r.Id).
+                FirstOrDefault()
+
+            If latestRevision Is Nothing Then
+                latestRevision = New DocumentRevision With {
+                    .ProjectDocumentId = document.Id,
+                    .RevisionCode = If(String.IsNullOrWhiteSpace(document.CurrentRevision), "00", document.CurrentRevision),
+                    .Description = "FIRST ISSUE",
+                    .AssignedTo = "",
+                    .InternalReceiveDate = dlg.NEDateValue
+                }
+
+                db.DocumentRevisions.Add(latestRevision)
+            End If
+
+            latestRevision.OfficialIssueDate = dlg.SRLEffectiveDateValue
 
             db.SaveChanges()
         End Using
@@ -309,6 +356,7 @@ Class DocumentsPage
                             .CurrentRevision = "00",
                             .IssueDate = neDate,
                             .DateToManufacturer = manufacturerDate,
+                            .ManufacturerEffectiveDate = Nothing,
                             .Status = "NOT STARTED"
                         }
 

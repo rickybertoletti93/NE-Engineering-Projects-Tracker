@@ -5,6 +5,8 @@
     Public Property StatusValue As String
     Public Property NEDateValue As Date?
     Public Property ManufacturerDateValue As Date?
+    Public Property SRLEffectiveDateValue As Date?
+    Public Property ManufacturerEffectiveDateValue As Date?
 
     Public Sub New()
         InitializeComponent()
@@ -17,7 +19,9 @@
                    documentTitle As String,
                    status As String,
                    neDate As Date?,
-                   manufacturerDate As Date?)
+                   manufacturerDate As Date?,
+                   srlEffectiveDate As Date?,
+                   manufacturerEffectiveDate As Date?)
         InitializeComponent()
         LoadStatuses()
 
@@ -27,6 +31,8 @@
         cmbStatus.Text = status
         dpNEDate.SelectedDate = neDate
         dpManufacturerDate.SelectedDate = manufacturerDate
+        dpSRLEffectiveDate.SelectedDate = srlEffectiveDate
+        dpManufacturerEffectiveDate.SelectedDate = manufacturerEffectiveDate
 
         UpdateDateDisplays()
     End Sub
@@ -60,6 +66,22 @@
         UpdateDateDisplays()
     End Sub
 
+    Private Sub btnSRLEffectiveDate_Click(sender As Object, e As RoutedEventArgs)
+        dpSRLEffectiveDate.IsDropDownOpen = True
+    End Sub
+
+    Private Sub btnManufacturerEffectiveDate_Click(sender As Object, e As RoutedEventArgs)
+        dpManufacturerEffectiveDate.IsDropDownOpen = True
+    End Sub
+
+    Private Sub dpSRLEffectiveDate_SelectedDateChanged(sender As Object, e As SelectionChangedEventArgs)
+        UpdateDateDisplays()
+    End Sub
+
+    Private Sub dpManufacturerEffectiveDate_SelectedDateChanged(sender As Object, e As SelectionChangedEventArgs)
+        UpdateDateDisplays()
+    End Sub
+
     Private Sub UpdateDateDisplays()
         If dpNEDate IsNot Nothing AndAlso btnNEDate IsNot Nothing Then
             btnNEDate.Tag = If(dpNEDate.SelectedDate.HasValue,
@@ -71,6 +93,18 @@
             btnManufacturerDate.Tag = If(dpManufacturerDate.SelectedDate.HasValue,
                                          dpManufacturerDate.SelectedDate.Value.ToString("dd/MM/yyyy"),
                                          "Select a date")
+        End If
+
+        If dpSRLEffectiveDate IsNot Nothing AndAlso btnSRLEffectiveDate IsNot Nothing Then
+            btnSRLEffectiveDate.Tag = If(dpSRLEffectiveDate.SelectedDate.HasValue,
+                                         dpSRLEffectiveDate.SelectedDate.Value.ToString("dd/MM/yyyy"),
+                                         "Select a date")
+        End If
+
+        If dpManufacturerEffectiveDate IsNot Nothing AndAlso btnManufacturerEffectiveDate IsNot Nothing Then
+            btnManufacturerEffectiveDate.Tag = If(dpManufacturerEffectiveDate.SelectedDate.HasValue,
+                                                  dpManufacturerEffectiveDate.SelectedDate.Value.ToString("dd/MM/yyyy"),
+                                                  "Select a date")
         End If
     End Sub
 
@@ -95,6 +129,8 @@
         StatusValue = cmbStatus.Text.Trim()
         NEDateValue = dpNEDate.SelectedDate
         ManufacturerDateValue = dpManufacturerDate.SelectedDate
+        SRLEffectiveDateValue = dpSRLEffectiveDate.SelectedDate
+        ManufacturerEffectiveDateValue = dpManufacturerEffectiveDate.SelectedDate
 
         DialogResult = True
         Close()
